@@ -6,10 +6,10 @@ on:
       - 'cmd/**'
       - 'hack/ci/**'
       - 'pkg/**'
-      - '.github/workflows/Kogito-Operator-OLM-tests.yaml'
+      - '.github/workflows/kogito-olm-tests.yaml'
 env:
   OP_TEST_CONTAINER_TOOL: docker
-  GO_VERSION: 1.16
+  GO_VERSION: 1.17
   OP_TEST_DEBUG: 1
   OP_TEST_CONTAINER_OPT: "-t"
 jobs:
@@ -46,10 +46,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-mod-
       - run: go mod tidy
-      - name: Build Operator Image
-        env:
-          BUILDER: docker
-        run: make docker-build
+      - name: Install ansible
+        run: sudo add-apt-repository --yes --update ppa:ansible/ansible && sudo apt-get install -y ansible
       - name: Run OLM Integration Test
         run: make olm-tests
       - name: Upload
